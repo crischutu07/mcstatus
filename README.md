@@ -1,7 +1,7 @@
 # mcstatus
 A minecraft query staus checker using API from mcstatus.io
 # Installation
-You only need to install `jq` and `curl` on your Linux distrbutions
+You only need to install `jq` and `curl` on your Linux distributions (`getopt` might included cuz some machine like Mac OS don't have it installed by default idk)
 # Usage
 ```
 $ mcstatus
