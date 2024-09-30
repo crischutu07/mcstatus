@@ -69,7 +69,10 @@ if [[ -z "$address" ]]; then
   help
 fi
 
-CONTENTS=$(curl -s "https://api.mcstatus.io/v2/status/java/$address" || { log "cURL failed to fetch"; echo "Error fetching server status"; exit 1; })
+CONTENTS="$(curl -s "https://api.mcstatus.io/v2/status/java/$address")"
+[[ "$CONTENTS" == "Invalid address value" ]] && {
+  echo "$CONTENTS"; exit 1
+}
 [[ "$(jq -r '.online' <<< "$CONTENTS")" != "true" ]] && {
   log "API Returned Server is Offline."; online='!' 
   motd=0; ver=0; mods=0; plugins=0
