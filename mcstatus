@@ -31,8 +31,7 @@ help (){
   -V, --verbose
     Turn on verbose mode (debug mode).
 
-  More information about this command or filing a bugs, visit this repository: <https://github.com/crischutu07/mcstatus>
-  """
+  More information about this command or filing a bugs, visit this repository: <https://github.com/crischutu07/mcstatus>\n"""
   exit 1
 }
 OPTIONS=$(getopt -o ahmpPvV --long no-address,help,show-mods,hide-plugins,hide-players,hide-versions,verbose -- "$@")
@@ -90,7 +89,8 @@ if [[ "$noaddr" == 1 ]]; then
 else
   echo "($online) Address: $address ($addr)"
 fi
-
+((motd)) && 
+  printf "===\n%s\n===\n" "$(jq -r '.motd.clean' <<< "$CONTENTS" || echo 'null')"
 ((ver)) && {
   echo "Version: $(jq -r '.version.name_clean' <<< "$CONTENTS")"
 }
@@ -114,7 +114,7 @@ fi
 ((mods)) && {
   mods_count=$(jq -r '.mods | length' <<< "$CONTENTS")
   if [[ $mods_count != 0 ]]; then
-    echo "Mods ($mods_count)"
+    echo "╭ Mods ($mods_count)"
     for ((i=0; i<mods_count; i++)); do
       mod_name=$(jq -r ".mods[$i].name" <<< "$CONTENTS")
       mod_version=$(jq -r ".mods[$i].version" <<< "$CONTENTS")
@@ -127,8 +127,6 @@ fi
   fi
 }
 
-((motd)) && 
-  printf "===\n%s\n===\n" "$(jq -r '.motd.clean' <<< "$CONTENTS" || echo 'null')"
 
 ((hide_players)) && {
   players=$(jq -r '.players' <<< "$CONTENTS")
@@ -136,7 +134,7 @@ fi
     player_count=$(jq -r '.players.list | length' <<< "$CONTENTS")
     player_online=$(jq -r '.players.online' <<< "$CONTENTS")
     max_players=$(jq -r '.players.max' <<< "$CONTENTS")
-    echo "Players ($player_online/$max_players)"
+    echo "╭ Players ($player_online/$max_players)"
     if [[ "$player_count" -gt 0 ]]; then
       for ((i=0; i<player_count; i++)); do
 	player_name=$(jq -r ".players.list[$i].name_clean" <<< "$CONTENTS")
